@@ -1,11 +1,11 @@
 import mongoose, { Schema } from "mongoose";
 
-enum Role {
+export enum Role {
   Students = "students",
   Admin = "admin",
 }
 
-interface IUser extends Document {
+export interface IUser extends Document {
   username: String;
   profileImage: String;
   email: String;
