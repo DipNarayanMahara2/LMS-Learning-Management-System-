@@ -5,5 +5,5 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
-  return getCategories();
+  return getCategories(req);
 }

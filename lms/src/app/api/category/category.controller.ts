@@ -41,7 +41,7 @@ export async function createCategory(req: Request) {
   }
 }
 
-export async function getCategories() {
+export async function getCategories(req: Request) {
   try {
     authMiddleware(req as NextRequest);
     await dbConnect();
