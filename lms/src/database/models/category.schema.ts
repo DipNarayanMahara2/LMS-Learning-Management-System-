@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
-interface ICategory extends Document {
+export interface ICategory extends Document {
+  _id: string;
   name: string;
   description?: string;
   createdAt: Date;
@@ -19,5 +20,6 @@ const categorySchema = new Schema<ICategory>({
   },
 });
 
-const Category = mongoose.models.Category || mongoose.model("Category", categorySchema);
+const Category =
+  mongoose.models.Category || mongoose.model("Category", categorySchema);
 export default Category;
