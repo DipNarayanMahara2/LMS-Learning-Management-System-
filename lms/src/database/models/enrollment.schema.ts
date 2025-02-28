@@ -4,6 +4,13 @@ interface IEnrollment extends Document {
   student: mongoose.Types.ObjectId;
   course: mongoose.Types.ObjectId;
   enrolledAt: Date;
+  enrollmentStatus: EnrollmentStatus;
+  whatsapp: string;
+}
+enum EnrollmentStatus {
+  Approve = "approved",
+  Reject = "rejected",
+  Pending = "pending",
 }
 
 const enrollmentSchema = new Schema<IEnrollment>({
@@ -19,6 +26,16 @@ const enrollmentSchema = new Schema<IEnrollment>({
     type: Date,
     default: Date.now(),
   },
+  enrollmentStatus: {
+    type: String,
+    enum: [
+      EnrollmentStatus.Approve,
+      EnrollmentStatus.Reject,
+      EnrollmentStatus.Pending,
+    ],
+    default: EnrollmentStatus.Pending,
+  },
+  whatsapp: String,
 });
 
 const Enrollment =
