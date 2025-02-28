@@ -13,7 +13,8 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
   const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
-  const { status } = useAppSelector((store) => store.categories);
+  
+  const { status } = useAppSelector((store) => store.category);
 
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,6 +28,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
       dispatch(resetStatus());
     }
   }, [status]);
+
   return (
     <div
       id="modal"

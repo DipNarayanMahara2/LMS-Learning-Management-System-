@@ -11,16 +11,12 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 function Categories() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  
   const dispatch = useAppDispatch();
 
-  const { categories } = useAppSelector((store) => store.categories);
+  const { categories } = useAppSelector((store) => store.category);
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
-  // const openModalRef = useRef<()=>void | null>(null)
-  // if(openModalRef.current){
-  //   console.log("Function instance changed vayo !!", openModalRef.current !== openModal)
-  // }
-  // openModalRef.current = openModal
 
   const deleteCat = (id: string) => {
     if (id) {

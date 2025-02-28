@@ -1,4 +1,4 @@
-import Dashboard from "@/components/dashboard";
+import Dashboard from "@/components/dashboard/dashboard";
 
 function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
