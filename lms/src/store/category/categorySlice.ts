@@ -1,15 +1,15 @@
+import Categories from "@/app/admin/categories/page";
 import { createSlice } from "@reduxjs/toolkit";
-import { ICategoryInitialState, status } from "./types";
+import { ICategoryInitailState, Status } from "./types";
 
-const datas: ICategoryInitialState = {
+const datas: ICategoryInitailState = {
   categories: [],
-  status: status.loading,
+  status: Status.Loading,
 };
 
 const categorySlice = createSlice({
   name: "category",
   initialState: datas,
-
   reducers: {
     setStatus(state, action) {
       state.status = action.payload;
@@ -20,6 +20,6 @@ const categorySlice = createSlice({
   },
 });
 
-const { setCategories, setStatus } = categorySlice.actions;
+const {setCategories,setStatus} = categorySlice.actions
 
-export default categorySlice.reducer;
+export default categorySlice.reducer

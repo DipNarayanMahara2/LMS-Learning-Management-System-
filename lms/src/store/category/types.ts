@@ -1,17 +1,17 @@
-export enum status {
-  loading = "loading",
-  Success = "success",
+export enum Status {
+  Loading = "loading",
+  Success = " success",
   Error = "error",
 }
 
-export interface ICategory {
+export interface Icategory {
   _id: string;
   description: string;
   name: string;
   createdAt: string;
 }
 
-export interface ICategoryInitialState {
-  categories: ICategory[];
-  status: status;
+export interface ICategoryInitailState {
+  categories: Icategory[];
+  status: Status;
 }
