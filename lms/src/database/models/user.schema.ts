@@ -1,34 +1,33 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
 
 export enum Role {
-  Students = "students",
+  Student = "student",
   Admin = "admin",
 }
 
 export interface IUser extends Document {
-  username: String;
-  profileImage: String;
-  email: String;
+  username: string;
+  profileImage: string;
+  email: string;
   role: Role;
 }
 
 const userSchema = new Schema<IUser>({
   username: {
     type: String,
-    reqired: true,
+    required: true,
   },
   email: {
     type: String,
-    reqired: true,
+    required: true,
   },
   role: {
     type: String,
-    enum: [Role.Admin, Role.Students],
-    defult: Role.Students,
+    enum: [Role.Student, Role.Admin],
+    default: Role.Student,
   },
-  profileImage: {
-    type: String,
-  },
+  profileImage: String,
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

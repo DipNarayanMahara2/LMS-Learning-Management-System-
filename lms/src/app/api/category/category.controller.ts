@@ -5,8 +5,6 @@ import { NextRequest } from "next/server";
 
 export async function createCategory(req: Request) {
   try {
-    // const response = authMiddleware(req as NextRequest)
-    // if(response) return response
     await dbConnect();
     const response = await authMiddleware(req as NextRequest);
     if (response.status === 401) {

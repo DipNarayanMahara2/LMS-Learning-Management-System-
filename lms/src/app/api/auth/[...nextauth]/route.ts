@@ -1,5 +1,5 @@
 import dbConnect from "@/database/connection";
-import User from "@/database/models/user.schema";
+import User, { Role } from "@/database/models/user.schema";
 import NextAuth, { Session } from "next-auth";
 import {} from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
@@ -21,6 +21,7 @@ export const authOptions: AuthOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
+
   callbacks: {
     async signIn({
       user,
@@ -29,7 +30,7 @@ export const authOptions: AuthOptions = {
     }): Promise<boolean> {
       try {
         await dbConnect();
-        const existingUser = await User.findOne({ email: user.email }); // return object {username : "sdfdf",email:"sdf"} , {}\
+        const existingUser = await User.findOne({ email: user.email });
 
         if (!existingUser) {
           await User.create({
@@ -44,6 +45,7 @@ export const authOptions: AuthOptions = {
         return false;
       }
     },
+
     async jwt({ token }: { token: IToken }) {
       await dbConnect();
       const user = await User.findOne({
@@ -56,6 +58,7 @@ export const authOptions: AuthOptions = {
       }
       return token;
     },
+
     async session({ session, token }: { session: Session; token: IToken }) {
       if (token) {
         session.user.id = token.id;
