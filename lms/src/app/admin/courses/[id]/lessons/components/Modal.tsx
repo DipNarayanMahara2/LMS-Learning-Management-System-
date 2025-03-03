@@ -1,31 +1,32 @@
 "use client";
 
-import { fetchCategories, resetStatus } from "@/store/category/categorySlice";
+import { resetStatus } from "@/store/category/categorySlice";
 import { Status } from "@/store/category/types";
-import { createCourse } from "@/store/courses/courseSlice";
-import { ICourseForData } from "@/store/courses/types";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { createLesson } from "@/store/lessons/lessonSlice";
+import { ILessonForData } from "@/store/lessons/types";
 import {
   ChangeEvent,
   useEffect,
   useState,
 } from "react";
 
+
 interface IModalProps {
   closeModal: () => void;
+  courseId : string
 }
 
-const Modal: React.FC<IModalProps> = ({ closeModal }) => {
+const Modal: React.FC<IModalProps> = ({ closeModal , courseId}) => {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
-  const { status } = useAppSelector((store) => store.courses);
-  const { categories } = useAppSelector((store) => store.category);
-  const [data, setData] = useState<ICourseForData>({
+  const { status } = useAppSelector((store) => store.lessons);
+  // const { categories } = useAppSelector((store) => store.category);
+  const [data, setData] = useState<ILessonForData>({
     title: "",
     description: "",
-    price: 0,
-    category: "",
-    duration: "",
+      videoUrl : "",
+      coures : courseId,
   });
 
   const handleChange = (
@@ -37,18 +38,14 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
       [name]: value,
     });
   };
-  useEffect(() => {
-    if (categories.length === 0) {
-      dispatch(fetchCategories());
-    }
-  }, []);
+  
 
   const createCourseHandle = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(createCourse(data));
+    dispatch(createLesson(data));
   };
   useEffect(() => {
-    console.log(status, "STATUS");
+  
     if (status === Status.Success) {
       setLoading(false);
       closeModal();
@@ -73,7 +70,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
       <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Add Course
+            Add Lesson
           </h3>
           <button
             onClick={closeModal}
@@ -105,7 +102,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
                 htmlFor="website_url"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                Course Title
+                Lesson Title
               </label>
               <input
                 onChange={handleChange}
@@ -117,72 +114,32 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
                 required
               />
             </div>
-            <div className="flex justify-between">
+            <div >
               <div>
                 <label
                   htmlFor="website_url"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
-                  Course Price
+                  Lesson Video Url
                 </label>
                 <input
                   onChange={handleChange}
-                  name="price"
-                  type="number"
+                  name="videoUrl"
+                  type="url"
                   id="website_url"
                   className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
                   placeholder="999"
                   required
                 />
               </div>
-              <div>
-                <label
-                  htmlFor="website_url"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                  Course Duration
-                </label>
-                <input
-                  name="duration"
-                  onChange={handleChange}
-                  type="text"
-                  id="website_url"
-                  className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
-                  placeholder="30 Days"
-                  required
-                />
-              </div>
             </div>
+            
             <div>
               <label
                 htmlFor="website_url"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                Category{" "}
-              </label>
-              <select
-                name="category"
-                onChange={handleChange}
-                id="website_url"
-                className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
-                required
-              >
-                {categories.length &&
-                  categories.map((category) => {
-                    return (
-                      <option key={category._id} value={category._id}>
-                        {category.name}
-                      </option>
-                    );
-                  })}
-              </select>
-            </div>
-            <div>
-              <label
-                htmlFor="website_url"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
-                Course Description
+                Lesson Description
               </label>
               <textarea
                 onChange={handleChange}

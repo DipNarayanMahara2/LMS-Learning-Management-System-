@@ -17,6 +17,7 @@ export async function createCourse(req: Request) {
       duration,
       category,
     });
+    
 
     return Response.json(
       {

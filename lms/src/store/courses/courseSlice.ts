@@ -3,6 +3,7 @@ import { Status } from "../category/types";
 import { ICourse, ICourseForData, IInitialData } from "./types";
 import { AppDispatch } from "../store";
 import API from "@/http";
+import Course from "@/database/models/courses.schema";
 
 const data: IInitialData = {
   courses: [],
@@ -22,7 +23,7 @@ const courseSlice = createSlice({
     pushToCourses(state: IInitialData, action: PayloadAction<ICourse>) {
       state.courses.push(action.payload);
     },
-    deleteCourseByIndex(state: IInitialData, action: PayloadAction<string>) {
+    deleteCourseByIndex(state:IInitialData, action:PayloadAction<string>) {
       const index = state.courses.findIndex(
         (course) => course._id == action.payload
       );
@@ -30,7 +31,7 @@ const courseSlice = createSlice({
         state.courses.splice(index, 1);
       }
     },
-    resetStatus(state) {
+    couresResetStatus(state) {
       state.status = Status.Loading;
     },
   },
@@ -40,7 +41,7 @@ const {
   setStatus,
   pushToCourses,
   deleteCourseByIndex,
-  resetStatus,
+  couresResetStatus,
 } = courseSlice.actions;
 export default courseSlice.reducer;
 
@@ -82,7 +83,8 @@ export function deleteCourse(id: string) {
     try {
       const response = await API.delete("/course/" + id);
       if (response.status == 200) {
-        dispatch(deleteCourseByIndex(id));
+        // dispatch(setStatus(Status.Success));
+        dispatch(deleteCourseByIndex(id))
       } else {
         dispatch(setStatus(Status.Error));
       }

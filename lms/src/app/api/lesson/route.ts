@@ -8,7 +8,7 @@ export async function POST(req:Request)
 }
 
 
-export async function GET()
+export async function GET(req:Request)
 {
-  return fetchLessons()
+  return fetchLessons(req)
 }

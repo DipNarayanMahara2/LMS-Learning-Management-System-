@@ -1,5 +1,4 @@
 import dbConnect from "@/database/connection";
-import Course from "@/database/models/courses.schema";
 import Lesson from "@/database/models/lesson.Schema";
 
 export async function createLesson(req: Request) {
@@ -8,7 +7,7 @@ export async function createLesson(req: Request) {
 
     const { title, description, videoUrl, course} = await req.json();
 
-    const data = await Course.create({
+    const data = await Lesson.create({
       title,
       description,
       videoUrl,
@@ -33,10 +32,13 @@ export async function createLesson(req: Request) {
   }
 }
 
-export async function fetchLessons() {
+export async function fetchLessons(req:Request) {
   try {
     await dbConnect();
-    const data = await Lesson.find().populate("course");
+    const { courseId } = await req.json();
+  const data = await Lesson.find({
+    course: courseId,
+  }).populate("course");
 
     if (data.length == 0) {
       return Response.json(
