@@ -10,7 +10,7 @@ export interface ICourseForData {
   title: string;
   description: string;
   price: number;
-  category: ICategory | string;
+  category: ICategory;
   duration: string;
   _id?: string;
 }

@@ -103,7 +103,7 @@ export async function deleteCourse(id: string) {
   try {
     await dbConnect();
 
-    await Course.findByIdAndDelete({ id });
+    await Course.findByIdAndDelete(id);
     await Lesson.deleteMany({course:id})
 
     return Response.json(

@@ -176,7 +176,7 @@ function Courses() {
                               </svg>
                             </button>
                             <button
-                              // onClick={()=>handleDelete(course?._id)}
+                              onClick={()=>handleDelete(course?._id as string)}
                               className="p-2 rounded-full  group transition-all duration-500  flex item-center"
                             >
                               <svg
