@@ -7,7 +7,7 @@ interface IEnrollment extends Document {
   enrollmentStatus: EnrollmentStatus;
   whatsapp: string;
 }
-enum EnrollmentStatus {
+export enum EnrollmentStatus {
   Approve = "approved",
   Reject = "rejected",
   Pending = "pending",
