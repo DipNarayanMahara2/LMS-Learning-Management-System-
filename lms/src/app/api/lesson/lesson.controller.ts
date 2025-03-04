@@ -5,13 +5,13 @@ export async function createLesson(req: Request) {
   try {
     await dbConnect();
 
-    const { title, description, videoUrl, course} = await req.json();
+    const { title, description, videoUrl, course } = await req.json();
 
     const data = await Lesson.create({
       title,
       description,
       videoUrl,
-      course
+      course,
     });
 
     return Response.json(
@@ -32,18 +32,20 @@ export async function createLesson(req: Request) {
   }
 }
 
-export async function fetchLessons(req:Request) {
+export async function fetchLessons(req: Request) {
   try {
     await dbConnect();
-    const { courseId } = await req.json();
-  const data = await Lesson.find({
-    course: courseId,
-  }).populate("course");
+    const { searchParams } = new URL(req.url);
+    const courseId = searchParams.get("coursId");
+
+    console.log(courseId, "IUD");
+    const data = await Lesson.find({ course: courseId }).populate("course");
 
     if (data.length == 0) {
       return Response.json(
         {
-          message: "no lesson found with this id found",
+          message: "no lesson found with this id",
+          data:[]
         },
         { status: 404 }
       );
@@ -53,7 +55,7 @@ export async function fetchLessons(req:Request) {
         message: "Courses lesson",
         data,
       },
-      { status: 200 }
+      { status: 200 } 
     );
   } catch (error) {
     console.log(error);

@@ -1,14 +1,15 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import Modal from "./components/Modal";
 import { deleteLesson, fetchLessons } from "@/store/lessons/lessonSlice";
 
-function Lesson({params}:{params:{id:string}}) {
+function Lesson() {
 
-  const courseId= params.id
+   const data = useParams()
+   const courseId = data.id
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -16,9 +17,11 @@ function Lesson({params}:{params:{id:string}}) {
   const dispatch = useAppDispatch();
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
+
   useEffect(() => {
-    dispatch(fetchLessons());
-  }, []);
+    dispatch(fetchLessons(courseId as string));
+  },[]);
+
   const filteredLessons = lessons.filter((lesson) =>
     lesson.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -28,7 +31,7 @@ function Lesson({params}:{params:{id:string}}) {
   return (
     <div className="flex flex-col">
       <div className=" overflow-x-auto">
-        {isModalOpen && <Modal closeModal={closeModal} courseId={courseId} />}
+        {isModalOpen && <Modal closeModal={closeModal} courseId={courseId as string} />}
         <div className="min-w-full inline-block align-middle">
           <div className="relative  text-gray-500 focus-within:text-gray-900 mb-4">
             <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">
@@ -112,7 +115,7 @@ function Lesson({params}:{params:{id:string}}) {
                   filteredLessons.map((lesson) => {
                     return (
                       <tr
-                        key={lesson.title}
+                        key={lesson._id}
                         className="bg-white transition-all duration-500 hover:bg-gray-50"
                       >
                         <td
@@ -152,7 +155,7 @@ function Lesson({params}:{params:{id:string}}) {
                               </svg>
                             </button>
                             <button
-                              // onClick={() => handleDelete(lesson?._id)}
+                              onClick={() => handleDelete(lesson?._id as string)}
                               className="p-2 rounded-full  group transition-all duration-500  flex item-center"
                             >
                               <svg

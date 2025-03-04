@@ -45,10 +45,10 @@ const {
 } = lessonSlice.actions;
 export default lessonSlice.reducer;
 
-export function fetchLessons() {
+export function fetchLessons(id:string) {
   return async function fetchLessonsThunk(dispatch: AppDispatch) {
     try {
-      const response = await API.get("/lesson");
+      const response = await API.get("/lesson?courseId=" + id);
       if (response.status == 200) {
         dispatch(setLessons(response.data.data));
       } else {
@@ -56,6 +56,7 @@ export function fetchLessons() {
       }
     } catch (error) {
       console.log(error);
+      dispatch(setLessons([]));
       dispatch(setStatus(Status.Error));
     }
   };
