@@ -1,4 +1,6 @@
 "use client";
+
+import { fetchEnrollments } from "@/store/enrollment/enrollmentSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { deleteStudent, fetchStudents } from "@/store/students/studentSlice";
 import { useEffect, useState } from "react";
@@ -8,14 +10,14 @@ function Student() {
 
   const [searchTerm, setSearchTerm]= useState<string>("");
 
-  const { students } = useAppSelector((store) => store.students);
+  const { enrollments } = useAppSelector((store) => store.enrollments);
   useEffect(() => {
-    dispatch(fetchStudents());
+    dispatch(fetchEnrollments());
   }, []);
 
-  const filteredStudents = students.filter(
-    (student)=>student.username.toLowerCase().includes(searchTerm.toLowerCase()) || student.email.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  // const filteredStudents = enrollments.filter(
+  //   (student)=>student.username.toLowerCase().includes(searchTerm.toLowerCase()) || student.email.toLowerCase().includes(searchTerm.toLowerCase())
+  // )
 
    const handleDelete = (id: string) => {
       id && dispatch(deleteStudent(id));
@@ -56,7 +58,7 @@ function Student() {
               </svg>
             </div>
             <input
-            onChange={(e)=>setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
               type="text"
               id="default-search"
               className="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none"
@@ -79,21 +81,25 @@ function Student() {
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
                   >
                     {" "}
-                    UserName{" "}
+                    student Name{" "}
                   </th>
                   <th
                     scope="col"
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
                   >
-                    {" "}
-                    Email{" "}
+                    Course Name
                   </th>
                   <th
                     scope="col"
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
                   >
-                    {" "}
-                    Profile{" "}
+                    Enrollment Status
+                  </th>
+                  <th
+                    scope="col"
+                    className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
+                  >
+                    Whatsapp Number
                   </th>
                   <th
                     scope="col"
@@ -105,24 +111,27 @@ function Student() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300 ">
-                {filteredStudents.length > 0 &&
-                  filteredStudents.map((student) => {
+                {enrollments.length > 0 &&
+                  enrollments.map((enrollment) => {
                     return (
                       <tr
-                        key={student?._id}
+                        key={enrollment?._id}
                         className="bg-white transition-all duration-500 hover:bg-gray-50"
                       >
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
-                          {student?._id}
+                          {enrollment?.student?._id}
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                          {student?.username}
+                          {enrollment?.student?.username}
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                          {student?.email}
+                          {enrollment?.course?.title}
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                          {student?.profileImg}
+                          {enrollment?.enrollmentStatus}
+                        </td>
+                        <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                          {enrollment?.whatsapp}
                         </td>
                         <td className=" p-5 ">
                           <div className="flex items-center gap-1">
@@ -142,8 +151,10 @@ function Student() {
                                 />
                               </svg>
                             </button>
-                            <button onClick={()=>handleDelete(student._id)}
-                             className="p-2 rounded-full  group transition-all duration-500  flex item-center">
+                            <button
+                              onClick={() => handleDelete(enrollment._id)}
+                              className="p-2 rounded-full  group transition-all duration-500  flex item-center"
+                            >
                               <svg
                                 width={20}
                                 height={20}
