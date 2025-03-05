@@ -1,9 +1,46 @@
 import dbConnect from "@/database/connection"
+import Course from "@/database/models/courses.schema";
 import Enrollment from "@/database/models/enrollment.schema"
+import Payment from "@/database/models/payment.schema";
 
 
 export async function enrollCourse(req:Request){
+ try {
+   await dbConnect();
 
+   const { course, whatsapp, paymentMethod } = await req.json();
+   const data = await Enrollment.create({
+     whatsapp,
+     course,
+     student: "11", // session.user.id
+   });
+   
+   const courseData = await Course.findById(course);
+   if (paymentMethod === paymentMethod.Esewa) {
+   } else {
+     // khalti
+     await Payment.create({
+       enrollment: data._id,
+       amount: courseData.price,
+       paymentMethod: paymentMethod.Khalti,
+     });
+   }
+   return Response.json(
+     {
+       message: "You enrolled the course",
+       data,
+     },
+     { status: 201 }
+   );
+ } catch (error) {
+   console.log(error);
+   return Response.json(
+     {
+       message: "Something went wrong",
+     },
+     { status: 500 }
+   );
+ }
 }
 
 

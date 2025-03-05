@@ -40,7 +40,7 @@ export async function createCourse(req: Request) {
 export async function fetchCourses() {
   try {
     await dbConnect()
-    const data = await Course.find();
+    const data = await Course.find().populate("category");
 
     if (data.length == 0) {
       return Response.json(

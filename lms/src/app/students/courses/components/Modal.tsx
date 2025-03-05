@@ -1,33 +1,41 @@
 "use client";
-import { createCategory, resetStatus } from "@/store/category/categorySlice";
+
+import { PaymentMethod } from "@/database/models/payment.schema";
 import { Status } from "@/store/category/types";
+import { enrollCourse } from "@/store/courses/courseSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ChangeEvent, useEffect, useState } from "react";
 
 interface IModalProps {
   closeModal: () => void;
+  courseId: string
 }
 
-const Modal: React.FC<IModalProps> = ({ closeModal }) => {
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+const Modal: React.FC<IModalProps> = ({ closeModal, courseId }) => {
   const [loading, setLoading] = useState(false);
+  console.log(courseId,"couresIdHO")
   const dispatch = useAppDispatch();
-  
-  const { status } = useAppSelector((store) => store.category);
+  const [whatsapp , setWhatsapp] = useState<string>("")
+  const { courses } = useAppSelector((store) => store.courses);
+  const[paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PaymentMethod.Esewa)
 
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    dispatch(createCategory({ name, description }));
+    dispatch(enrollCourse({course:courseId,paymentMethod,whatsapp}))
   };
-  useEffect(() => {
-    if (status === Status.Success) {
-      setLoading(false);
-      closeModal();
-      dispatch(resetStatus());
-    }
-  }, [status]);
+  // useEffect(() => {
+  //   if (status === Status.Success) {
+  //     setLoading(false);
+  //     closeModal();
+  //     // dispatch(resetStatus());
+  //   }
+  // }, [status]);
+
+  const handlePaymentChange =(e:ChangeEvent<HTMLSelectElement>)=>{
+    setPaymentMethod(e.target.value as PaymentMethod)
+
+  }
 
   return (
     <div
@@ -38,7 +46,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
       <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Add Category
+            Enroll Now
           </h3>
           <button
             onClick={closeModal}
@@ -70,32 +78,34 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
                 htmlFor="website_url"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                Category Name
+                Whatsapp Number :
               </label>
-              <input
-                onChange={(e) => setName(e.target.value)}
+              <input onChange={(e)=>setWhatsapp(e.target.value)}
                 type="text"
                 id="website_url"
-                className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
-                placeholder="Electronics, Foods"
+                className=" mb-1 w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
+                placeholder="+977 9814355678"
                 required
               />
             </div>
-            <div >
+            <div className="mb-3">
               <label
                 htmlFor="website_url"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 "
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                Category Description
+                Pay With : 
               </label>
-              <input
-                onChange={(e) => setDescription(e.target.value)}
-                type="text"
+              <select
+                onChange={handlePaymentChange}
                 id="website_url"
-                className="w-full mt-3 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
-                placeholder="..."
+                className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
                 required
-              />
+              >
+                <option value={PaymentMethod.Esewa}>{PaymentMethod.Esewa}</option>
+                <option value={PaymentMethod.khalti}>
+                  {PaymentMethod.khalti}
+                </option>
+              </select>
             </div>
             <div className="flex justify-end gap-3">
               <button
@@ -111,7 +121,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
                 className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-md bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 dark:from-indigo-500 dark:to-violet-500 dark:hover:from-indigo-600 dark:hover:to-violet-600"
                 disabled={loading}
               >
-                {loading ? "Adding ..." : "Add Category"}
+                {loading ? "Adding ..." : paymentMethod ===PaymentMethod.Esewa ?"Pay with Esewa": "Pay With Khalti"}
                 <svg
                   className="h-4 w-4 inline-block ml-2"
                   xmlns="http://www.w3.org/2000/svg"

@@ -3,7 +3,14 @@ import { Status } from "../category/types";
 import { ICourse, ICourseForData, IInitialData } from "./types";
 import { AppDispatch } from "../store";
 import API from "@/http";
-import Course from "@/database/models/courses.schema";
+import { PaymentMethod } from "@/database/models/payment.schema";
+
+
+export interface IEnrollmentData{
+  whatsapp : string,
+  course: string,
+  paymentMethod: PaymentMethod
+}
 
 const data: IInitialData = {
   courses: [],
@@ -85,6 +92,26 @@ export function deleteCourse(id: string) {
       if (response.status == 200) {
         // dispatch(setStatus(Status.Success));
         dispatch(deleteCourseByIndex(id))
+      } else {
+        dispatch(setStatus(Status.Error));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(setStatus(Status.Error));
+    }
+  };
+}
+
+
+
+export function enrollCourse(data: IEnrollmentData) {
+  return async function enrollCourse(dispatch: AppDispatch) {
+    try {
+      const response = await API.post("/enrollment", data);
+      if (response.status == 201) {
+        dispatch(setStatus(Status.Success));
+        // dispatch(pushToCourses(response.data.data));
+        
       } else {
         dispatch(setStatus(Status.Error));
       }

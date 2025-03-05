@@ -1,27 +1,23 @@
 "use client";
-
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import CourseCard from "./components/courseCard";
 import { useEffect } from "react";
+import CourseCard from "./components/courseCard";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchCourses } from "@/store/courses/courseSlice";
 
-function Course() {
+function Courses() {
   const { courses } = useAppSelector((store) => store.courses);
-
   const dispatch = useAppDispatch();
-
   useEffect(() => {
     dispatch(fetchCourses());
   }, []);
-
   return (
-    <div className="flex flex-wrap justify-evenly">
+    <div className="flex justify-evenly flex-wrap">
       {courses.length > 0 &&
-        courses.map((courses) => {
-          return <CourseCard key={courses?._id} course ={courses}/>;
+        courses.map((course) => {
+          return <CourseCard key={course._id} course={course} />;
         })}
     </div>
   );
 }
 
-export default Course;
+export default Courses;
