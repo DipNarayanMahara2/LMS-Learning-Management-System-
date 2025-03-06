@@ -37,7 +37,7 @@ export async function enrollCourse(req: Request) {
     let paymentUrl;
 
     const courseData = await Course.findById(course);
-    if (paymentMethod === paymentMethod.Esewa) {
+    if (paymentMethod === PaymentMethod.Esewa) {
     } else {
       // khalti
       const data = {
@@ -63,7 +63,7 @@ export async function enrollCourse(req: Request) {
       await Payment.create({
         enrollment: enrollmentData._id,
         amount: courseData.price,
-        paymentMethod: paymentMethod.Khalti,
+        paymentMethod: PaymentMethod.khalti,
       });
     }
     return Response.json(

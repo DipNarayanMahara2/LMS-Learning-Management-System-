@@ -13,7 +13,7 @@ const data: IInitialData = {
 };
 
 const enrollmentSlice = createSlice({
-  name: "enrollemts",
+  name: "enrollments",
   initialState: data,
   reducers: {
     setStatus(state: IInitialData, action: PayloadAction<Status>) {
@@ -22,7 +22,7 @@ const enrollmentSlice = createSlice({
     setEnrollment(state: IInitialData, action: PayloadAction<IEnrollment[]>) {
       state.enrollments = action.payload;
     },
-    setPaymentUrl(state, action) {
+    setPaymentUrl(state: IInitialData, action: PayloadAction<string | null>) {
       state.paymentUrl = action.payload;
     },
   },
@@ -40,7 +40,7 @@ export function fetchEnrollments() {
         dispatch(setStatus(Status.Success));
         dispatch(setEnrollment(response.data.data));
         if (response.data.data.paymentUrl) {
-          dispatch(response.data.data.paymentUrl);
+          dispatch(setPaymentUrl(response.data.data.paymentUrl));
         }
       } else {
         dispatch(setStatus(Status.Error));
@@ -51,7 +51,7 @@ export function fetchEnrollments() {
   };
 }
 
-export function changeEnrollmentStatus(state: EnrollmentStatus, id: string) {
+export function changeEnrollmentStatus(status: EnrollmentStatus, id: string) {
   return async function changeEnrollmentStatusThunk(dispatch: AppDispatch) {
     try {
       const response = await API.patch(`/enrollment/${id}`, { status: status });
