@@ -1,6 +1,6 @@
 import { PaymentMethod } from "@/database/models/payment.schema";
 import { Status } from "@/store/category/types";
-import { enrollCourse } from "@/store/courses/courseSlice";
+import { enrollCourse } from "@/store/enrollment/enrollmentSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ChangeEvent, useEffect, useState } from "react";
 
@@ -13,7 +13,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal, courseId }) => {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [whatsapp, setWhatsapp] = useState<string>("");
-  // const { status, paymentUrl } = useAppSelector((store) => store.enrollments);
+  const { status, paymentUrl} = useAppSelector((store) => store.enrollments);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
     PaymentMethod.Esewa
   );
@@ -26,14 +26,14 @@ const Modal: React.FC<IModalProps> = ({ closeModal, courseId }) => {
     if (status === Status.Success) {
       setLoading(false);
       closeModal();
-      // window.open(paymentUrl as string,"_blank")
       //   dispatch(resetStatus())
     }
   }, [status]);
-  console.log(status, "STATUS");
+  console.log(status,"STATUS")
   const handlePaymentChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setPaymentMethod(e.target.value as PaymentMethod);
   };
+
   return (
     <div
       id="modal"

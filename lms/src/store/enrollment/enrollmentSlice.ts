@@ -4,11 +4,13 @@ import { EnrollmentStatus } from "@/database/models/enrollment.schema";
 import { AppDispatch } from "../store";
 import API from "@/http";
 import { IEnrollment, IInitialData } from "./types";
-
+import { stat } from "fs";
+import { IEnrollmentData } from "../courses/courseSlice";
 
 const data: IInitialData = {
   status: Status.Loading,
   enrollments: [],
+  paymentUrl: null,
 };
 
 const enrollmentSlice = createSlice({
@@ -21,10 +23,13 @@ const enrollmentSlice = createSlice({
     setEnrollment(state: IInitialData, action: PayloadAction<IEnrollment[]>) {
       state.enrollments = action.payload;
     },
+    setPaymentUrl(state, action) {
+      state.paymentUrl = action.payload;
+    },
   },
 });
 
-const { setStatus, setEnrollment } = enrollmentSlice.actions;
+const { setStatus, setEnrollment, setPaymentUrl } = enrollmentSlice.actions;
 export default enrollmentSlice.reducer;
 
 export function fetchEnrollments() {
@@ -35,6 +40,9 @@ export function fetchEnrollments() {
       if (response.status === 200) {
         dispatch(setStatus(Status.Success));
         dispatch(setEnrollment(response.data.data));
+        if (response.data.data.paymentUrl) {
+          dispatch(response.data.data.paymentUrl);
+        }
       } else {
         dispatch(setStatus(Status.Error));
       }
@@ -54,6 +62,23 @@ export function changeEnrollmentStatus(state: EnrollmentStatus, id: string) {
         dispatch(setStatus(Status.Error));
       }
     } catch (error) {
+      dispatch(setStatus(Status.Error));
+    }
+  };
+}
+
+export function enrollCourse(data: IEnrollmentData) {
+  return async function enrollCourseThunk(dispatch: AppDispatch) {
+    try {
+      const response = await API.post("/enrollment", data);
+      if (response.status == 201) {
+        dispatch(setStatus(Status.Success));
+        window.location.href = response.data.data.paymentUrl;
+      } else {
+        dispatch(setStatus(Status.Error));
+      }
+    } catch (error) {
+      console.log(error);
       dispatch(setStatus(Status.Error));
     }
   };
