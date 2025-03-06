@@ -4,7 +4,6 @@ import { EnrollmentStatus } from "@/database/models/enrollment.schema";
 import { AppDispatch } from "../store";
 import API from "@/http";
 import { IEnrollment, IInitialData } from "./types";
-import { stat } from "fs";
 import { IEnrollmentData } from "../courses/courseSlice";
 
 const data: IInitialData = {
