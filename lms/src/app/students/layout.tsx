@@ -11,7 +11,7 @@ function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     // console.log(status, "STATUS");
     if (status === "loading") return;
 
-    if (!session || session.user.role !== "student") {
+    if (!session) {
       redirect("/home");
     }
   }, [session, status]);

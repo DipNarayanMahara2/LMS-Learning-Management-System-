@@ -10,6 +10,8 @@ function CourseCard({ course }: { course: ICourse }) {
   }, []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
   const [courseId, setCourseId] = useState<string>("");
+
+  
   return (
     <div className="max-w-lg mt-4 bg-gray-900 shadow-lg rounded-2xl">
       {isModalOpen && <Modal closeModal={closeModal} courseId={courseId} />}

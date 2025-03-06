@@ -1,6 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import { ST } from "next/dist/shared/lib/utils";
-import Enrollment, { EnrollmentStatus } from "./enrollment.schema";
 
 enum Status {
   completed = "Completed",
@@ -41,6 +39,6 @@ const paymentSchema = new Schema<IPayment>({
   }
 });
 
-const Payment = mongoose.model("Payment", paymentSchema);
+const Payment = mongoose.models?.Payment || mongoose.model("Payment", paymentSchema);
 
 export default Payment;
